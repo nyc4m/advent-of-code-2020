@@ -1,4 +1,3 @@
-import { fstat } from 'fs';
 import { promises as fs } from 'fs';
 
 type Pair = [number, number];
