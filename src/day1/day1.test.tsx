@@ -9,12 +9,12 @@ describe('day1', () => {
     expect(parseList(example)).toEqual(intList);
   });
   it('should match example result', () => {
-    const tuple = findPair(intList);
+    const tuple = findPair(intList, 2020);
     expect(tuple[0] * tuple[1]).toEqual(514579);
   });
 
   it("should find a 'threeple' i guess", () => {
-    const [one, two, three] = findTriple(intList);
+    const [one, two, three] = findTriple(intList, 2020);
     expect(one * two * three).toBe(241861950);
   });
 });

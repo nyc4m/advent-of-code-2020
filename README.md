@@ -9,9 +9,3 @@ $ yarn start <day>
 ```bash
 $ yarn test
 ```
-
-## Progression
-
-day | comment
----:|:---
-day 1 | 5699 iterations

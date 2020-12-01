@@ -7,8 +7,9 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "start": "yarn ts-node src/main.ts",
-    "test": "jest"
+    "start": "ts-node src/main.ts",
+    "test": "jest",
+    "format": "prettier src --write"
   },
   "dependencies": {
     "@types/node": "^14.14.10",

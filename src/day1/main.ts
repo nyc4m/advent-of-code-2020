@@ -1,11 +1,11 @@
 import { fstat } from 'fs';
 import { promises as fs } from 'fs';
 
-type Pair = [number, number]
+type Pair = [number, number];
 
-type Triple = [number, number, number]
+type Triple = [number, number, number];
 
-export function findPair(numbers: number[]): Pair {
+export function findPair(numbers: number[], expected: number): Pair {
   const memory = new Map();
   for (let i = 0; i < numbers.length; i++) {
     for (let j = 0; j < numbers.length; j++) {
@@ -18,7 +18,7 @@ export function findPair(numbers: number[]): Pair {
 
         return [a, b];
       }
-      if (a + b === 2020) {
+      if (a + b === expected) {
         memory.set(b, a);
       }
     }
@@ -26,8 +26,20 @@ export function findPair(numbers: number[]): Pair {
   return [0, 0];
 }
 
-export function findTriple(numbers: number[]): Triple {
-  return [0, 0, 0]
+export function findTriple(numbers: number[], expected: number): Triple {
+  for (let i = 0; i < numbers.length; i++) {
+    for (let j = 1; j < numbers.length - 1; j++) {
+      for (let k = 2; k < numbers.length - 2; k++) {
+        const a = numbers[i];
+        const b = numbers[j];
+        const c = numbers[k];
+        if (a + b + c === expected) {
+          return [a, b, c];
+        }
+      }
+    }
+  }
+  return [0, 0, 0];
 }
 
 export function parseList(rawList: string): number[] {
@@ -37,8 +49,19 @@ export function parseList(rawList: string): number[] {
     .map((n) => parseInt(n, 10));
 }
 
-export async function day1() {
+async function part1() {
   const list = (await fs.readFile('./src/day1/input_day1')).toString('utf8');
-  const pair = findPair(parseList(list));
+  const pair = findPair(parseList(list), 2020);
   console.log(`Pair found : ${pair[0]} ${pair[1]} : ${pair[0] * pair[1]}`);
 }
+
+async function part2() {
+  const list = (await fs.readFile('./src/day1/input_day1')).toString('utf8');
+  const pair = findTriple(parseList(list), 2020);
+  console.log(`Triple found : ${pair[0]} ${pair[1]} ${pair[2]} : ${pair[0] *pair[1] *pair[2]}`)
+}
+
+export const day1 = {
+  part1,
+  part2,
+};
