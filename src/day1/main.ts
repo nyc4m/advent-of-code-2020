@@ -1,17 +1,11 @@
 import { fstat } from 'fs';
 import { promises as fs } from 'fs';
 
-<<<<<<< HEAD
 type Pair = [number, number]
 
 type Triple = [number, number, number]
-=======
-type Twople = [number, number];
 
-type Threeple = [number, number, number];
->>>>>>> 9f10770... add prettier
-
-export function findTwople(numbers: number[]): Pair {
+export function findPair(numbers: number[]): Pair {
   const memory = new Map();
   for (let i = 0; i < numbers.length; i++) {
     for (let j = 0; j < numbers.length; j++) {
@@ -32,13 +26,8 @@ export function findTwople(numbers: number[]): Pair {
   return [0, 0];
 }
 
-<<<<<<< HEAD
-export function findThreeple(numbers: number[]): Triple {
+export function findTriple(numbers: number[]): Triple {
   return [0, 0, 0]
-=======
-export function findThreeple(numbers: number[]): Threeple {
-  return [0, 0, 0];
->>>>>>> 9f10770... add prettier
 }
 
 export function parseList(rawList: string): number[] {
@@ -50,6 +39,6 @@ export function parseList(rawList: string): number[] {
 
 export async function day1() {
   const list = (await fs.readFile('./src/day1/input_day1')).toString('utf8');
-  const pair = findTwople(parseList(list));
+  const pair = findPair(parseList(list));
   console.log(`Pair found : ${pair[0]} ${pair[1]} : ${pair[0] * pair[1]}`);
 }

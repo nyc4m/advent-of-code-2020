@@ -1,4 +1,4 @@
-import { findThreeple, findTwople, parseList } from './main';
+import { findTriple, findPair, parseList } from './main';
 
 const example = '1721\n979\n366\n299\n675\n1456\n';
 
@@ -9,12 +9,12 @@ describe('day1', () => {
     expect(parseList(example)).toEqual(intList);
   });
   it('should match example result', () => {
-    const tuple = findTwople(intList);
+    const tuple = findPair(intList);
     expect(tuple[0] * tuple[1]).toEqual(514579);
   });
 
   it("should find a 'threeple' i guess", () => {
-    const [one, two, three] = findThreeple(intList);
+    const [one, two, three] = findTriple(intList);
     expect(one * two * three).toBe(241861950);
   });
 });
