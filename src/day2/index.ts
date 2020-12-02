@@ -57,7 +57,7 @@ export function findValidPasswordWithPositions(
 ): number {
   return passwordsValidation.filter((validation) => {
     const { letter, password } = validation;
-    //Elves start indexing at 1, no at 0
+    //Elves start indexing at 1, not at 0
     const firstPos = validation.min - 1;
     const secondPos = validation.max - 1;
     const firstPositionOk = password.charAt(firstPos) === letter;
