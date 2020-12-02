@@ -1,4 +1,8 @@
-import { parseInput, findValidPasswords } from '.';
+import {
+  parseInput,
+  findValidPasswords,
+  findValidPasswordWithPositions,
+} from '.';
 
 const sample = '1-3 a: abcde\n1-3 b: cdefg\n2-9 c: ccccccccc\n';
 
@@ -27,7 +31,10 @@ describe('day 2', () => {
     const parsedLine = parseInput(sample);
     expect(parsedLine).toEqual(parsedPasswords);
   });
-  it('should find one wrong line', () => {
+  it('should find two correct password', () => {
     expect(findValidPasswords(parsedPasswords)).toBe(2);
+  });
+  it('should find 1 correct password', () => {
+    expect(findValidPasswordWithPositions(parsedPasswords)).toBe(1);
   });
 });
