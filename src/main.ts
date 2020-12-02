@@ -1,4 +1,5 @@
 import { day1 } from './day1/main';
+import { day2 } from './day2';
 
 const [ts_node, main, day, part] = process.argv;
 
@@ -9,6 +10,7 @@ interface Day {
 
 const days: { [key: string]: Day } = {
   day1,
+  day2
 };
 
 const dayToExecute = days[day];
