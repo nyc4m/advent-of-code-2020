@@ -8,7 +8,7 @@
   "private": false,
   "scripts": {
     "start": "ts-node src/main.ts",
-    "test": "jest",
+    "test": "jest --watch-all",
     "format": "prettier src --write"
   },
   "dependencies": {
