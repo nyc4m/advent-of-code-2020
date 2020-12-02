@@ -8,7 +8,7 @@ interface Day {
 }
 
 const days: { [key: string]: Day } = {
-  day1
+  day1,
 };
 
 const dayToExecute = days[day];

@@ -4,7 +4,7 @@ const example = '1721\n979\n366\n299\n675\n1456\n';
 
 const intList = [1721, 979, 366, 299, 675, 1456];
 
-const sortedList = [...intList].sort((a, b) => a-b)
+const sortedList = [...intList].sort((a, b) => a - b);
 
 describe('day1', () => {
   it('should parse a list of int', () => {
