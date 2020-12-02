@@ -11,8 +11,8 @@ async function part1() {
   const input = await readFileAsString('./src/day2/input_day2');
   const parsed = parseInput(input);
 
-  const wrongPasswords = findValidPasswords(parsed);
-  console.log(`Wrong passwords : ${wrongPasswords}`);
+  const validPasswords = findValidPasswords(parsed);
+  console.log(`Valid passwords : ${validPasswords}`);
 }
 
 export function parseInput(input: string): PasswordPolicy[] {
