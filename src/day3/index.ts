@@ -17,16 +17,12 @@ export class Day3Map {
     const containedIndex = col % this.boardWidth
     return {
       atRow: (row: number) => {
-        if (row >= this.board.length) throw new Error('THIS IS TOO FAR')
         return this.board[row][containedIndex]
       },
     }
   }
   get length(): number {
     return this.board.length
-  }
-  getLine(i: number) {
-    return this.board[i]
   }
 }
 
@@ -36,24 +32,20 @@ type Position = {
 }
 export function computeNumberOfTreeInPath(
   map: Day3Map,
-  direction: Direction
+  direction: Direction,
+  position: Position = { x: 0, y: 0 },
+  trees = 0
 ): number {
-  const increment = (position: Position, direction: Direction): Position => ({
-    x: position.x + direction.right,
-    y: position.y + direction.down,
-  })
-  let tree = 0
-  for (
-    let position = { x: 0, y: 0 };
-    position.y < map.length;
-    position = increment(position, direction)
-  ) {
-    const treeOrSquare = map.getSquare(position.x).atRow(position.y)
-    if (treeOrSquare === '#') {
-      tree++
-    }
+  if (position.y >= map.length) {
+    return trees
   }
-  return tree
+  const foundTree = map.getSquare(position.x).atRow(position.y) === '#'
+  return computeNumberOfTreeInPath(
+    map,
+    direction,
+    { x: position.x + direction.right, y: position.y + direction.down },
+    foundTree ? trees + 1 : trees
+  )
 }
 
 async function part1() {
