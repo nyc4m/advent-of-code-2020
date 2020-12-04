@@ -1,6 +1,7 @@
 import { day1 } from './day1/main'
 import { day2 } from './day2'
 import { day3 } from './day3'
+import { day4 } from './day4'
 
 const [ts_node, main, day, part] = process.argv
 
@@ -13,6 +14,7 @@ const days: { [key: string]: Day } = {
   day1,
   day2,
   day3,
+  day4,
 }
 
 const dayToExecute = days[day]
