@@ -17,9 +17,7 @@ function parseField(fieldValue: string): { name: string; value: string } {
   return { name: splitted[0], value: splitted[1] }
 }
 
-export function parseOfficialDocument(
-  document: string
-): OfficialDocument {
+export function parseOfficialDocument(document: string): OfficialDocument {
   return document
     .split(/\n| /)
     .map(parseField)

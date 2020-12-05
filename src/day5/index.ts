@@ -51,9 +51,20 @@ async function part1() {
   console.log(`Max ID is ${Math.max(...ids)}`)
 }
 
+async function part2() {
+  const input = await readFileAsString('./src/day5/input_day5')
+  const idBeforeMissing = input
+    .split('\n')
+    .slice(0, -1)
+    .map((s) => findPosition(s))
+    .map((position) => position[0] * 8 + position[1])
+    .sort((a, b) => a - b)
+    .find((value, index, array) => value + 1 !== array[index + 1])
+  const foundId = idBeforeMissing ? idBeforeMissing + 1 : 0
+  console.log(`found ID: ${foundId}`)
+}
+
 export const day5 = {
   part1,
-  part2: () => {
-    throw new Error('TODO')
-  },
+  part2,
 }
