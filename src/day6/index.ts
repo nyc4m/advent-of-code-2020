@@ -12,7 +12,9 @@ export function calculateAnswerSum(
   return groupedAnwers.map(mapper).reduce((sum, i) => sum + i, 0)
 }
 
-export function computeNumberOfAnswerWhereEveryoneSaidYes(answers: string): number {
+export function computeNumberOfAnswerWhereEveryoneSaidYes(
+  answers: string
+): number {
   const peopleAnswers = new Map<string, number>()
   const people = answers.split('\n')
   const groupSize = people.length

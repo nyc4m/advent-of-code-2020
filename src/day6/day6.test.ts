@@ -27,14 +27,16 @@ describe('day6', () => {
   })
   describe('part 2 : everyone should answer yes', () => {
     it.each`
-      input             | expected
-      ${'ab\nbc'}       | ${1}
+      input           | expected
+      ${'ab\nbc'}     | ${1}
       ${'a\na\na\na'} | ${1}
     `('should return $expected when $input', ({ input, expected }) => {
       expect(computeNumberOfAnswerWhereEveryoneSaidYes(input)).toBe(expected)
     })
-    it("should compite 6", () => {
-      expect(calculateAnswerSum(input, computeNumberOfAnswerWhereEveryoneSaidYes)).toBe(6)
+    it('should compite 6', () => {
+      expect(
+        calculateAnswerSum(input, computeNumberOfAnswerWhereEveryoneSaidYes)
+      ).toBe(6)
     })
   })
 })
