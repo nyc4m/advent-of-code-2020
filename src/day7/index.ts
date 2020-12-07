@@ -1,19 +1,24 @@
 import { readFileAsString } from '../utils'
 
+type BagRelation = {
+  count: number
+  bag: Bag
+}
+
 class Bag {
   constructor(
     public readonly color: string,
-    private containing: Bag[] = [],
+    private containing: BagRelation[] = [],
     private containedBy: Bag[] = []
   ) {}
-  addBags(bag: Bag) {
-    this.containing.push(bag)
+  addBag(bagRelation: BagRelation) {
+    this.containing.push(bagRelation)
   }
   addParentBag(bag: Bag) {
     this.containedBy.push(bag)
   }
 
-  get content(): Bag[] {
+  get content(): BagRelation[] {
     return this.containing
   }
 
@@ -66,13 +71,18 @@ export function parseBags(input: string): BagDatabase {
           if (b.trim() === 'no other') {
             return 'NO_COLOR'
           }
-          return b.substring(1).trim()
+          let matched = b.match(/\d*/)
+          if (!matched) {
+            throw new Error('No number for bags')
+          }
+          const count = parseInt(matched[0], 10)
+          return { count: count, color: b.substring(1).trim() }
         })
       const bag = bagDb.findByColorOrCreate(bagToRemember)
       bagsToBeContained.forEach((b) => {
         if (b === 'NO_COLOR') return
-        const child = bagDb.findByColorOrCreate(b)
-        bag.addBags(child)
+        const child = bagDb.findByColorOrCreate(b.color)
+        bag.addBag({ count: b.count, bag: child })
         child.addParentBag(bag)
       })
     })
@@ -80,38 +90,48 @@ export function parseBags(input: string): BagDatabase {
 }
 
 export function findNumberOgBags(
-  db: BagDatabase,
-  color: string,
-  alreadySeen: Set<string> = new Set(),
-  alreadyFound: number = 0
-): number {
-  if (alreadySeen.has(color)) return alreadyFound
-  alreadySeen.add(color)
-  const bagsStored = db.findByColor(color)
+  bag: Bag,
+  alreadySeen: Set<string> = new Set()
+): Set<string> {
+  if (alreadySeen.has(bag.color)) return alreadySeen
+  alreadySeen.add(bag.color)
 
-  if (bagsStored.bagAncestor.length === 0) {
-    return alreadyFound
+  if (bag.bagAncestor.length === 0) {
+    return alreadySeen
   }
-  bagsStored.bagAncestor.forEach((bag) =>
-    findNumberOgBags(db, bag.color, alreadySeen, alreadyFound + 1)
+  const allSets = bag.bagAncestor.map((ancestor) =>
+    findNumberOgBags(ancestor, alreadySeen)
   )
-  // -1 -> the first bag we visit doesn't count
-  return alreadySeen.size -1
+  return new Set(...allSets)
 }
+
+export function calculateNumberOfBags(bag: Bag): number {
+    return bag.content.reduce((acc, relation) => {
+      return acc + calculateNumberOfBags(relation.bag) * relation.count
+    }, 1) 
+}
+
+const getTotal = (bag: Bag) => calculateNumberOfBags(bag) - 1
 
 async function part1() {
   const input = readFileAsString('./src/day7/input_day7')
   const db = parseBags(await input)
-  console.log(`bag database now contain ${db.count}`);
+  console.log(`bag database now contain ${db.count}`)
   console.log(db.allColors)
-  
-  const nbOfBags = findNumberOgBags(db, 'shiny gold')
+
+  const nbOfBags = findNumberOgBags(db.findByColor('shiny gold'))
   console.log(`found ${nbOfBags} bags`)
+}
+
+async function part2() {
+  const input = readFileAsString('./src/day7/input_day7')
+  const db = parseBags(await input)
+
+  const nbOfBags = calculateNumberOfBags(db.findByColor('shiny gold'))
+  console.log(`You need ${getTotal(db.findByColor('shiny gold'))} bags`)
 }
 
 export const day7 = {
   part1,
-  part2: () => {
-    throw new Error('TODO')
-  },
+  part2,
 }

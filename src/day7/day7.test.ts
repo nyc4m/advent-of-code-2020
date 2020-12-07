@@ -33,8 +33,10 @@ describe('day7', () => {
     const lightRed = bagDb.findByColor('light red')
     expect(lightRed.content).toHaveLength(2)
     const [white, yellow] = lightRed.content
-    expect(white.color).toBe('bright white')
-    expect(yellow.color).toBe('muted yellow')
+    expect(white.bag.color).toBe('bright white')
+    expect(white.count).toBe(1)
+    expect(yellow.bag.color).toBe('muted yellow')
+    expect(yellow.count).toBe(2)
   })
 
   it('should contain shiny gold', () => {
@@ -51,7 +53,15 @@ describe('day7', () => {
   })
 
   it('should be 4', () => {
-    const numberOfBags = Day7.findNumberOgBags(bagDb, 'shiny gold')
-    expect(numberOfBags).toBe(4)
+    const setOfBags = Day7.findNumberOgBags(bagDb.findByColor('shiny gold'))
+
+    expect(setOfBags.size).toBe(4)
+  })
+
+  it('should compute 32 bags', () => {
+    const numberOfBags = Day7.calculateNumberOfBags(
+      bagDb.findByColor('shiny gold')
+    )
+    expect(numberOfBags-1).toBe(32)
   })
 })
