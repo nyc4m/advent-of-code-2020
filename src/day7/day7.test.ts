@@ -62,6 +62,6 @@ describe('day7', () => {
     const numberOfBags = Day7.calculateNumberOfBags(
       bagDb.findByColor('shiny gold')
     )
-    expect(numberOfBags-1).toBe(32)
+    expect(numberOfBags - 1).toBe(32)
   })
 })

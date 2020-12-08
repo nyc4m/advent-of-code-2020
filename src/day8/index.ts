@@ -20,31 +20,40 @@ export function parseOperations(input: string): Operation[] {
 
 export class Computer {
   private readonly alreadyExecuted = new Set<number>()
-    private counter = 0
+  private counter = 0
   constructor(private operations: Operation[]) {}
-  runFromPosition(start: number, lastOp: number = 0): number {
-      if(this.alreadyExecuted.has(start)) {
-          console.log("loop detected with op: ", this.operations[lastOp], `at index: ${lastOp}`)
-          return this.counter
-      }
-      this.alreadyExecuted.add(start)
-      if(this.operations.length === 0) return this.counter
-      const {type, value} = this.operations[start]
-      switch(type) {
-          case "acc": 
-          this.counter += value
-          return this.runFromPosition(start+1, start)
-          case "jmp": return this.runFromPosition(start+value, start)
-          case "nop": return this.runFromPosition(start+1, start)
-      }
+  runFromPosition(
+    start: number,
+    lastOp: number = 0
+  ): { res: number; loop: boolean } {
+    if (this.alreadyExecuted.has(start)) {
+      console.log(
+        'loop detected with op: ',
+        this.operations[lastOp],
+        `at index: ${lastOp}`
+      )
+      return { loop: true, res: this.counter }
+    }
+    this.alreadyExecuted.add(start)
+    if (this.operations.length === 0) return { res: this.counter, loop: false }
+    const { type, value } = this.operations[start]
+    switch (type) {
+      case 'acc':
+        this.counter += value
+        return this.runFromPosition(start + 1, start)
+      case 'jmp':
+        return this.runFromPosition(start + value, start)
+      case 'nop':
+        return this.runFromPosition(start + 1, start)
+    }
   }
 }
 
 async function part1() {
-    const input = readFileAsString("./src/day8/input_day8")
-    const operations = parseOperations(await input)
-    const computer = new Computer(operations)
-    console.log(`counter is ${computer.runFromPosition(0)}`)
+  const input = readFileAsString('./src/day8/input_day8')
+  const operations = parseOperations(await input)
+  const computer = new Computer(operations)
+  console.log(`counter is ${computer.runFromPosition(0)}`)
 }
 
 export const day8 = {

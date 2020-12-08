@@ -106,9 +106,9 @@ export function findNumberOgBags(
 }
 
 export function calculateNumberOfBags(bag: Bag): number {
-    return bag.content.reduce((acc, relation) => {
-      return acc + calculateNumberOfBags(relation.bag) * relation.count
-    }, 1) 
+  return bag.content.reduce((acc, relation) => {
+    return acc + calculateNumberOfBags(relation.bag) * relation.count
+  }, 1)
 }
 
 const getTotal = (bag: Bag) => calculateNumberOfBags(bag) - 1
