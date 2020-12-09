@@ -51,4 +51,12 @@ describe('day 9', () => {
   it('should find 127', () => {
     expect(Day9.scanNumbers(numbers, 5)).toBe(127)
   })
+  it('should find a contiguous sequence that sum to 127', () => {
+    expect(Day9.findContiguousSetOfNumbers(numbers, 127)).toEqual([
+      15,
+      25,
+      47,
+      40,
+    ])
+  })
 })
