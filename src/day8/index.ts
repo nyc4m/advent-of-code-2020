@@ -30,16 +30,11 @@ export class Computer {
     lastOp: number = 0
   ): { res: number; loop: boolean } {
     if (this.alreadyExecuted.has(start)) {
-      console.log(
-        'loop detected with op: ',
-        this.operations[lastOp],
-        `at index: ${lastOp}`
-      )
       return { loop: true, res: this.counter }
     }
     this.alreadyExecuted.add(start)
     if (this.operations.length === 0) return { res: this.counter, loop: false }
-    if(!this.operations[start]) return {res: this.counter, loop: false}
+    if (!this.operations[start]) return { res: this.counter, loop: false }
     const { type, value } = this.operations[start]
     switch (type) {
       case 'acc':
@@ -63,7 +58,7 @@ function fixError(
   suspectedLines: Operation[]
 ): { res: number; loop: boolean } {
   const [line] = suspectedLines
-  const switchLineType = (line: string) =>line === 'nop' ? 'jmp' : 'nop'
+  const switchLineType = (line: string) => (line === 'nop' ? 'jmp' : 'nop')
   line.type = switchLineType(line.type)
   const execution = computer.runFromPosition(0)
   if (execution.loop) {
