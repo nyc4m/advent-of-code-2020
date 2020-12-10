@@ -41,9 +41,21 @@ describe('day 10', () => {
   `(
     'should find a difference of 7 1-jolt and 5 3-jolt',
     ({ joltages, expected }) => {
-      const repartition = Day10.computeJoltageRepartition(joltages)
+      const repartition = Day10.computeJoltageRepartition([...joltages])
       expect(repartition.oneJolt).toBe(expected.oneJolt)
       expect(repartition.threeJolt).toBe(expected.threeJolt)
     }
   )
+  it.each`
+    joltages     | expected
+    ${joltages1} | ${8}
+    ${joltages2} | ${19208}
+  `('should find $expected arrangements', ({ joltages, expected }) => {
+     const max = Math.max(...joltages)+3
+    const arrangements = Day10.computeNumberOfAdaptorsArrangement(
+      [0, ...joltages, max].sort((a, b) => a - b),
+      new Map()
+    )
+    expect(arrangements).toBe(expected)
+  })
 })

@@ -1,4 +1,5 @@
 import { parseListOfNumbers, readFileAsString } from '../utils'
+import { promises as fs } from 'fs'
 
 type JoltRepartition = {
   oneJolt: number
@@ -28,16 +29,49 @@ export function computeJoltageRepartition(
   )
 }
 
+export function computeNumberOfAdaptorsArrangement(
+  joltages: number[],
+  memoizedComputation: Map<number, number>
+): number {
+  if (joltages.length === 1) {
+    return 1
+  }
+  const [first, ...restOfJoltages] = joltages
+  if (memoizedComputation.has(first)) {
+    return memoizedComputation.get(first)!
+  }
+  const compatibleAdaptors = restOfJoltages.filter((j) => j - first <= 3)
+  compatibleAdaptors.forEach((adaptor) => {
+    const joltagesSlice = restOfJoltages.slice(restOfJoltages.indexOf(adaptor))
+    return memoizedComputation.set(adaptor, computeNumberOfAdaptorsArrangement(joltagesSlice, memoizedComputation))
+  })
+  const computedValue =  compatibleAdaptors.reduce((sum, val )=> sum+memoizedComputation.get(val)!!, 0)
+  memoizedComputation.set(first, computedValue)
+  
+  return computedValue
+}
+
 class Day10 {
   constructor(private inputPath: string) {}
   async part1() {
     const repartition = computeJoltageRepartition(await this.numbers)
-    console.table(
-        {...repartition, computed: repartition.oneJolt*repartition.threeJolt}
-    )
+    console.table({
+      ...repartition,
+      computed: repartition.oneJolt * repartition.threeJolt,
+    })
   }
   async part2() {
-    throw new Error('TODO')
+    const numbers = await this.numbers
+    const max = Math.max(...numbers)+3
+    const joltages = [0, ...numbers, max].sort(
+      (a, b) => a - b
+    )
+    console.log(numbers)
+    const numberOfArrangement = computeNumberOfAdaptorsArrangement(
+      joltages,
+      new Map()
+    )
+    console.log(`number of arrangement: ${numberOfArrangement}`)
   }
 
   private get numbers(): Promise<number[]> {
