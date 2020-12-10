@@ -1,10 +1,7 @@
 import * as Day1 from '../day1'
-import { readFileAsString } from '../utils'
+import { parseListOfNumbers, readFileAsString } from '../utils'
 
 const sortNumbers = (numbers: number[]) => numbers.sort((a, b) => a - b)
-export function parseNumbers(input: string): number[] {
-  return input.split('\n').map((i) => parseInt(i, 10))
-}
 
 export function scanNumbers(numbers: number[], windowSize: number): number {
   const sliceOfData = numbers.slice(0, windowSize)
@@ -58,7 +55,7 @@ class Day9 {
   }
   private get numbers(): Promise<number[]> {
     if (!this._numbers) {
-      this._numbers = readFileAsString(this.input).then(parseNumbers)
+      this._numbers = readFileAsString(this.input).then(parseListOfNumbers)
     }
     return this._numbers
   }
