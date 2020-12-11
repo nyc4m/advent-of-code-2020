@@ -51,7 +51,7 @@ describe('day 10', () => {
     ${joltages1} | ${8}
     ${joltages2} | ${19208}
   `('should find $expected arrangements', ({ joltages, expected }) => {
-     const max = Math.max(...joltages)+3
+    const max = Math.max(...joltages) + 3
     const arrangements = Day10.computeNumberOfAdaptorsArrangement(
       [0, ...joltages, max].sort((a, b) => a - b),
       new Map()

@@ -43,11 +43,17 @@ export function computeNumberOfAdaptorsArrangement(
   const compatibleAdaptors = restOfJoltages.filter((j) => j - first <= 3)
   compatibleAdaptors.forEach((adaptor) => {
     const joltagesSlice = restOfJoltages.slice(restOfJoltages.indexOf(adaptor))
-    return memoizedComputation.set(adaptor, computeNumberOfAdaptorsArrangement(joltagesSlice, memoizedComputation))
+    return memoizedComputation.set(
+      adaptor,
+      computeNumberOfAdaptorsArrangement(joltagesSlice, memoizedComputation)
+    )
   })
-  const computedValue =  compatibleAdaptors.reduce((sum, val )=> sum+memoizedComputation.get(val)!!, 0)
+  const computedValue = compatibleAdaptors.reduce(
+    (sum, val) => sum + memoizedComputation.get(val)!!,
+    0
+  )
   memoizedComputation.set(first, computedValue)
-  
+
   return computedValue
 }
 
@@ -62,10 +68,8 @@ class Day10 {
   }
   async part2() {
     const numbers = await this.numbers
-    const max = Math.max(...numbers)+3
-    const joltages = [0, ...numbers, max].sort(
-      (a, b) => a - b
-    )
+    const max = Math.max(...numbers) + 3
+    const joltages = [0, ...numbers, max].sort((a, b) => a - b)
     const numberOfArrangement = computeNumberOfAdaptorsArrangement(
       joltages,
       new Map()
