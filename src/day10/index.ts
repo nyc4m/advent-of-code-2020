@@ -66,7 +66,6 @@ class Day10 {
     const joltages = [0, ...numbers, max].sort(
       (a, b) => a - b
     )
-    console.log(numbers)
     const numberOfArrangement = computeNumberOfAdaptorsArrangement(
       joltages,
       new Map()
