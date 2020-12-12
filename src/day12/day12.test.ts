@@ -45,7 +45,7 @@ describe('day12', () => {
     `(
       'should rotate from $fromDirection to $expected with $rotation',
       ({ fromDirection, rotation, expected }) => {
-        expect(compass.rotateFrom(fromDirection, rotation)).toBe(expected)
+        expect(compass.rotateFrom(fromDirection, rotation.action, rotation.value)).toBe(expected)
       }
     )
   })

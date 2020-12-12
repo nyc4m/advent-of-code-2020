@@ -46,14 +46,15 @@ export class Compass {
   }
 
   rotateFrom(
-    orientation: Orientation,
-    rotation: { action: 'L' | 'R'; value: number }
+    start: Orientation,
+    to: 'L' | 'R',
+    of: number
   ) {
-    const offset = rotation.value / 90
+    const offset = of / 90
     return this.computeRotation(
-      orientation,
+      start,
       offset,
-      rotation.action === 'L' ? this.leftOrientations : this.rightOrientations
+      to === 'L' ? this.leftOrientations : this.rightOrientations
     )
   }
 }
@@ -114,8 +115,8 @@ export class Navigator {
       if (m.action === 'L' || m.action === 'R') {
         this.ferry.orientation = this.compass.rotateFrom(
           this.ferry.orientation,
-        //@ts-ignore
-          m
+          m.action,
+          m.value
         )
       } else if (m.action !== 'F') {
         this.ferry.moveInDirection(m.action, m.value)
