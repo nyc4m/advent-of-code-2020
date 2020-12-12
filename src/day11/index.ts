@@ -23,7 +23,7 @@ export class WaitingArea {
   constructor(
     private readonly seats: Array<Array<PositionType>>,
     public readonly sameAsLastRender: boolean = false,
-    private maxAuthorizedPeople: number=4
+    private maxAuthorizedPeople: number = 4
   ) {}
 
   get snapshot(): readonly PositionType[][] {
