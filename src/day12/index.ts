@@ -79,13 +79,13 @@ export class Ferry {
   moveInDirection(orientation: Orientation, value: number) {
     switch (orientation) {
       case 'E':
-        return this.moveEast(value)
+        return this._x+=value
       case 'W':
-        return this.moveWest(value)
+        return this._x-=value
       case 'S':
-        return this.moveSouth(value)
+        return this._y-=value
       case 'N':
-        return this.moveNorth(value)
+        return this._y+=value
     }
   }
 
@@ -99,22 +99,6 @@ export class Ferry {
 
   get distance(): number {
     return Math.abs(this._x) + Math.abs(this._y)
-  }
-
-  private moveEast(value: number) {
-    this._x += value
-  }
-
-  private moveWest(value: number) {
-    this._x -= value
-  }
-
-  private moveNorth(value: number) {
-    this._y += value
-  }
-
-  private moveSouth(value: number) {
-    this._y -= value
   }
 }
 
