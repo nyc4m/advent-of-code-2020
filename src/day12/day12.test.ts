@@ -19,7 +19,8 @@ describe('day12', () => {
     ])
   })
   it('should find manhattan distance', () => {
-    const navigator = new Day12.Navigator(
+    const distance = Day12.navigate(
+      { orientation: 'E', x: 0, y: 0 },
       [
         { action: 'F', value: 10 },
         { action: 'N', value: 3 },
@@ -27,10 +28,9 @@ describe('day12', () => {
         { action: 'R', value: 90 },
         { action: 'F', value: 11 },
       ],
-      new Day12.Ferry('E', 0, 0),
       new Day12.Compass()
     )
-    expect(navigator.navigate()).toBe(25)
+    expect(distance).toBe(25)
   })
   describe('compass', () => {
     const compass = new Day12.Compass()
@@ -45,7 +45,9 @@ describe('day12', () => {
     `(
       'should rotate from $fromDirection to $expected with $rotation',
       ({ fromDirection, rotation, expected }) => {
-        expect(compass.rotateFrom(fromDirection, rotation.action, rotation.value)).toBe(expected)
+        expect(
+          compass.rotateFrom(fromDirection, rotation.action, rotation.value)
+        ).toBe(expected)
       }
     )
   })

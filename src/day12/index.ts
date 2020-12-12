@@ -1,4 +1,3 @@
-import { threadId } from 'worker_threads'
 import { readFileAsString } from '../utils'
 
 type Orientation = 'N' | 'E' | 'S' | 'W'
@@ -45,11 +44,7 @@ export class Compass {
     return orientations[newIndex]
   }
 
-  rotateFrom(
-    start: Orientation,
-    to: 'L' | 'R',
-    of: number
-  ) {
+  rotateFrom(start: Orientation, to: 'L' | 'R', of: number) {
     const offset = of / 90
     return this.computeRotation(
       start,
@@ -59,90 +54,70 @@ export class Compass {
   }
 }
 
-export class Ferry {
-  constructor(
-    private _orientation: Orientation,
-    private _x: number,
-    private _y: number
-  ) {}
-
-  get orientation() {
-    return this._orientation
-  }
-  moveForward(value: number) {
-    return this.moveInDirection(this._orientation, value)
-  }
-
-  set orientation(value: Orientation) {
-    this._orientation = value
-  }
-
-  moveInDirection(orientation: Orientation, value: number) {
-    switch (orientation) {
-      case 'E':
-        return this._x+=value
-      case 'W':
-        return this._x-=value
-      case 'S':
-        return this._y-=value
-      case 'N':
-        return this._y+=value
-    }
-  }
-
-  get y(): number {
-    return this._y
-  }
-
-  get x(): number {
-    return this._x
-  }
-
-  get distance(): number {
-    return Math.abs(this._x) + Math.abs(this._y)
-  }
+type Ferry = {
+  readonly x: number
+  readonly y: number
+  readonly orientation: Orientation
 }
 
-export class Navigator {
-  constructor(
-    private moves: Move[],
-    private ferry: Ferry,
-    private compass: Compass
-  ) {}
-
-  navigate(): number {
-    this.moves.forEach((m) => {
-      if (m.action === 'L' || m.action === 'R') {
-        this.ferry.orientation = this.compass.rotateFrom(
-          this.ferry.orientation,
-          m.action,
-          m.value
-        )
-      } else if (m.action !== 'F') {
-        this.ferry.moveInDirection(m.action, m.value)
-      } else {
-        this.ferry.moveForward(m.value)
-      }
-    })
-    return this.ferry.distance
+export function navigate(
+  ferry: Ferry,
+  moves: Move[],
+  compass: Compass
+): number {
+  if (!moves.length) {
+    return Math.abs(ferry.x) + Math.abs(ferry.y)
+  }
+  const [nextMove, ...remainingMoves] = moves
+  const { value, action } = nextMove
+  const { x, y } = ferry
+  switch (action) {
+    case 'E':
+      return navigate({ ...ferry, x: x + value }, remainingMoves, compass)
+    case 'N':
+      return navigate({ ...ferry, y: y + value }, remainingMoves, compass)
+    case 'W':
+      return navigate({ ...ferry, x: x - value }, remainingMoves, compass)
+    case 'S':
+      return navigate({ ...ferry, y: y - value }, remainingMoves, compass)
+    case 'F':
+      return navigate(
+        ferry,
+        [{ action: ferry.orientation, value }, ...remainingMoves],
+        compass
+      )
+    case 'R':
+    case 'L':
+      return navigate(
+        {
+          ...ferry,
+          orientation: compass.rotateFrom(ferry.orientation, action, value),
+        },
+        remainingMoves,
+        compass
+      )
   }
 }
 
 class Day12 {
   constructor(private inputPath: string) {}
 
-  async part1(){
-    const navigator = new Navigator(await this.moves, new Ferry('E', 0, 0), new Compass())
-    console.log(`distance: ${navigator.navigate()}`);
+  async part1() {
+    const distance = navigate(
+      { orientation: 'E', x: 0, y: 0 },
+      await this.moves,
+      new Compass()
+    )
+    console.log(`distance: ${distance}`)
   }
 
-  async part2(){
-      throw new Error("TODO")
+  async part2() {
+    throw new Error('TODO')
   }
 
   get moves(): Promise<Move[]> {
-      return readFileAsString(this.inputPath).then(parseDirections)
+    return readFileAsString(this.inputPath).then(parseDirections)
   }
 }
 
-export const day12 = new Day12("./src/day12/input_day12")
+export const day12 = new Day12('./src/day12/input_day12')
