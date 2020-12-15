@@ -1,23 +1,21 @@
-import {List, Record, Map} from 'immutable'
+import { List, Record, Map } from 'immutable'
 
-export const memory = Record({mask: "", instructions: Map<string, string>()})
+export const memory = Record({ mask: '', instructions: Map<string, string>() })
 export type Memory = typeof memory
 
-
-
-export function parseInput(input: string):List<Memory> {
-    
+export function parseInput(input: string): List<Memory> {
+  return List()
 }
 
 async function part1() {
-    throw new Error("TODO")
+  throw new Error('TODO')
 }
 
 async function part2() {
-    throw new Error("TODO")
+  throw new Error('TODO')
 }
 
 export const day14 = {
-    part1, 
-    part2,
+  part1,
+  part2,
 }
