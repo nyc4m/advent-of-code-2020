@@ -12,13 +12,9 @@ export function executeInstructions(
   }
   if (/mask/.test(instruction)) {
     const match = instruction.match(/= (?<mask>[01X]*)/)
-    const {mask: foundMask} = match?.groups || {}
+    const { mask: foundMask } = match?.groups || {}
 
-    return executeInstructions(
-      instructions.slice(1),
-      foundMask,
-      memory
-    )
+    return executeInstructions(instructions.slice(1), foundMask, memory)
   }
   if (/mem/.test(instruction)) {
     const match = instruction.match(/mem\[(?<address>\d*)\] = (?<value>\d*)/)
@@ -57,8 +53,7 @@ async function part1() {
     await readFileAsString('./src/day14/input_day14')
   ).split('\n')
   const memory = executeInstructions(List(instructions), '', Map())
-  console.log(memory.reduce((acc, v) => v+acc,0));
-  
+  console.log(memory.reduce((acc, v) => v + acc, 0))
 }
 
 async function part2() {
