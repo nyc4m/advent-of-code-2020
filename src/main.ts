@@ -18,8 +18,8 @@ import { day16 } from './day16'
 const [ts_node, main, day, part] = process.argv
 
 interface Day {
-  part1: () => void
-  part2: () => void
+  part1: () => Promise<void>
+  part2: () => Promise<void>
 }
 
 const days: { [key: string]: Day } = {
@@ -47,14 +47,20 @@ if (!dayToExecute) {
   process.exit(1)
 }
 
+let pending
 switch (part) {
   case '1':
-    dayToExecute.part1()
+    pending = [dayToExecute.part1()]
     break
   case '2':
-    dayToExecute.part2()
+    pending = [dayToExecute.part2()]
     break
   default:
-    dayToExecute.part1()
-    dayToExecute.part2()
+    pending = [dayToExecute.part1(),
+    dayToExecute.part2()]
 }
+Promise.all(pending).catch((e) => {
+  if(e.message === "TODO") {
+    console.error("This is not done yet 🙃")
+  }
+})
