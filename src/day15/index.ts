@@ -9,20 +9,17 @@ async function part1() {
 
 async function part2() {
   const number = play(input, 30000000)
-  console.log({number});
+  console.log({ number })
 }
 
-export function play(
-  numbers: List<number>,
-  stopTurn: number
-): number {
+export function play(numbers: List<number>, stopTurn: number): number {
   let memory = Map<number, List<number>>().withMutations((map) => {
     numbers.forEach((v, k) => map.set(v, List([k])))
   })
   let last = numbers.last<number>()
-  for(let turn = numbers.size; turn<stopTurn; turn++) {
+  for (let turn = numbers.size; turn < stopTurn; turn++) {
     const lastSeenTurns = memory.get(last, List<number>([]))
-    if(lastSeenTurns.size < 2) {
+    if (lastSeenTurns.size < 2) {
       last = 0
       memory = memory.set(0, memory.get(0, List()).push(turn))
     } else {
