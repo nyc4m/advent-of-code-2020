@@ -56,11 +56,10 @@ switch (part) {
     pending = [dayToExecute.part2()]
     break
   default:
-    pending = [dayToExecute.part1(),
-    dayToExecute.part2()]
+    pending = [dayToExecute.part1(), dayToExecute.part2()]
 }
 Promise.all(pending).catch((e) => {
-  if(e.message === "TODO") {
-    console.error("This is not done yet 🙃")
+  if (e.message === 'TODO') {
+    console.error('This is not done yet 🙃')
   }
 })

@@ -1,4 +1,5 @@
 import { List } from 'immutable'
+import { resourceLimits } from 'worker_threads'
 import * as Day16 from './'
 const validParsedInput = [
   List([
@@ -41,8 +42,29 @@ nearby tickets:
     expect(parsedInput).toEqual(validParsedInput)
   })
 
-  it('should invalidate tickets', () => {
+  it('should compute errorRate tickets and return valid tickets', () => {
     const [rules, _, nearbyTickets] = validParsedInput
-    expect(Day16.computeErrorRate(nearbyTickets, rules)).toBe(71)
+    expect(Day16.computeErrorRate(nearbyTickets, rules).errorRate).toBe(71)
+    expect(Day16.computeErrorRate(nearbyTickets, rules).validTickets).toEqual(
+      List([List([7, 3, 47])])
+    )
+  })
+
+  it('should return fields name in order', () => {
+    const validSample = `class: 0-1 or 4-19
+row: 0-5 or 8-19
+seat: 0-13 or 16-19
+
+your ticket:
+11,12,13
+
+nearby tickets:
+3,9,18
+15,1,5
+5,14,9`
+    const [validRules, _, nearby] = Day16.parseInput(validSample)
+    expect(Day16.guessFieldsName(nearby, validRules)).toEqual(
+      List(['row', 'class', 'seat'])
+    )
   })
 })
