@@ -1,138 +1,81 @@
 import { readFileAsString } from '../utils'
+import { List, Set } from 'immutable'
 
 export type PositionType = 'L' | '#' | '.' | 'W'
 export type Coordinate = { y: number; x: number }
 
-export function parsePositions(input: string): Array<Array<PositionType>> {
+export type Square = { type: PositionType } & Coordinate
+
+export function parsePositions(input: string): Set<Square> {
   const lines = input.split('\n')
-  return lines.map((line) =>
-    line.split('').map((pos) => {
-      switch (pos) {
-        case 'L':
-        case '.':
-        case '#':
-          return pos
-        default:
-          throw new Error(`Unknown position type ${pos}`)
-      }
+  const squares = lines.map((line, lineIndex) =>
+    line.split('').map((pos, posIndex) => {
+      return { type: pos, x: posIndex, y: lineIndex }
     })
   )
+  return Set().withMutations((s) => {
+    squares.forEach((line) => line.forEach((seat) => s.add(seat)))
+  })
 }
 
-export class WaitingArea {
-  constructor(
-    private readonly seats: Array<Array<PositionType>>,
-    public readonly sameAsLastRender: boolean = false,
-    private maxAuthorizedPeople: number = 4
-  ) {}
-
-  get snapshot(): readonly PositionType[][] {
-    return this.seats
-  }
-
-  private coordAreOk({ x, y }: Coordinate) {
-    const xOk = x >= 0 && x < this.width
-    const yOk = y >= 0 && y < this.height
-    return xOk && yOk
-  }
-
-  getSeat(coord: Coordinate): PositionType {
-    if (this.coordAreOk(coord)) {
-      return this.seats[coord.y][coord.x]
-    }
-    return 'W'
-  }
-
-  get height(): number {
-    return this.seats.length
-  }
-
-  get width(): number {
-    return this.seats[0].length
-  }
-
-  getAdjacentSeatsFrom({ x, y }: Coordinate) {
-    const up = this.getSeat({ y: y - 1, x })
-    const down = this.getSeat({ y: y + 1, x })
-    const right = this.getSeat({ y, x: x + 1 })
-    const left = this.getSeat({ y, x: x - 1 })
-    const upLeft = this.getSeat({ y: y - 1, x: x - 1 })
-    const upRight = this.getSeat({ y: y - 1, x: x + 1 })
-    const downLeft = this.getSeat({ y: y + 1, x: x - 1 })
-    const downRight = this.getSeat({ y: y + 1, x: x + 1 })
-
-    return [up, down, right, left, downLeft, downRight, upRight, upLeft]
-  }
-
-  get nextState(): WaitingArea {
-    if (this.sameAsLastRender) {
-      return this
-    }
-    const newArea = this.snapshot.map((rows, y) => {
-      return rows.map((oldSeat, x) => {
-        if (oldSeat === '.') {
-          return '.'
-        }
-        const adjacentPositions = this.getAdjacentSeatsFrom({ y, x })
-
-        const occupiedSeats = adjacentPositions.filter((p) => p === '#')
-
-        switch (oldSeat) {
-          case '#':
-            return occupiedSeats.length >= this.maxAuthorizedPeople ? 'L' : '#'
-          case 'L':
-            return occupiedSeats.length === 0 ? '#' : oldSeat
-          default:
-            return oldSeat
-        }
-      })
-    })
-
-    let equal = true
-    for (var row = 0; row < this.height; row++) {
-      for (var seat = 0; seat < this.width; seat++) {
-        if (newArea[row][seat] !== this.snapshot[row][seat]) {
-          equal = false
-        }
-      }
-    }
-
-    return new WaitingArea(newArea, equal)
-  }
-
-  get occupiedSeats(): number {
-    return this.seats.reduce(
-      (sum, rows) => rows.filter((p) => p === '#').length + sum,
-      0
+export function findNeighbors(
+  { x, y }: Coordinate,
+  state: Set<Square>
+): List<Square> {
+  return state
+    .filter(
+      (s) =>
+        (s.x === x - 1 && s.y === y) ||
+        (s.x === x + 1 && s.y === y) ||
+        (s.y === y + 1 && s.x === x) ||
+        (s.y === y - 1 && s.x === x) ||
+        (s.y === y - 1 && s.x === x - 1) ||
+        (s.y === y - 1 && s.x === x + 1) ||
+        (s.y === y + 1 && s.x === x - 1) ||
+        (s.y === y + 1 && s.x === x + 1)
     )
-  }
+    .toList()
 }
 
-export function runUntilNobodyMoveFromTheirDamnSeats(
-  waitingArea: WaitingArea
-): WaitingArea {
-  const renders = [waitingArea, waitingArea.nextState]
-  while (!renders[renders.length - 1].sameAsLastRender) {
-    const newState = renders[renders.length - 1].nextState
-    renders.push(newState)
+export function renderNewState(state: Set<Square>): Set<Square> {
+  return state.map((s) => {
+    const { x, y, type } = s
+    const neighbours = findNeighbors({ x, y }, state)
+    const occupied = neighbours.filter((s) => s.type !== '#')
+    switch (type) {
+      case '#':
+        return occupied.size >= 4 ? { ...s, type: 'L' } : { ...s, type: '#' }
+      case 'L':
+        return occupied.size > 1 ? { ...s } : { ...s, type: '#' }
+      default:
+        return s
+    }
+  })
+}
+
+export function runUntilNobodyMoveFromTheirDamnSeats(state: Set<Square>): Set<Square> {
+  let oldState = state
+  let nextState = renderNewState(state);
+  while (!nextState.equals(oldState)) {
+    oldState = nextState
+    nextState = renderNewState(oldState)
   }
-  return renders[renders.length - 1]
+  return nextState
 }
 
 class Day11 {
   constructor(private inputPath: string) {}
 
   async part1() {
-    const waitingArea = new WaitingArea(await this.positions)
-    const lastRender = runUntilNobodyMoveFromTheirDamnSeats(waitingArea)
-    console.log(`seats: ${lastRender.occupiedSeats}`)
+    const lastRender = runUntilNobodyMoveFromTheirDamnSeats(await this.positions)
+    console.log(`seats: ${lastRender.filter(s => s.type === '#').size}`)
   }
 
   async part2() {
     throw new Error('TODO')
   }
 
-  get positions(): Promise<PositionType[][]> {
+  get positions(): Promise<Set<Square>> {
     return readFileAsString(this.inputPath).then(parsePositions)
   }
 }

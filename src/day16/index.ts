@@ -103,11 +103,11 @@ async function part2() {
   const [rules, ticket, nearbyTickets] = parseInput(await input)
   const { validTickets } = computeErrorRate(nearbyTickets, rules)
   const fields = guessFieldsName(validTickets, rules)
-  
+
   const fieldsId = fields
     .map((name, i) => (/departure/.test(name) ? i : null))
     .filter((v) => v !== null)
-    
+
   const prod = fieldsId.reduce((product, v) => {
     const value = ticket.get(v!)!
 
