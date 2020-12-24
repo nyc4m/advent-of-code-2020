@@ -15,6 +15,7 @@ import { day14 } from './day14'
 import { day15 } from './day15'
 import { day16 } from './day16'
 import { day22 } from './day22'
+import { day23 } from './day23'
 
 const [ts_node, main, day, part] = process.argv
 
