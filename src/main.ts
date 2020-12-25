@@ -14,8 +14,11 @@ import { day13 } from './day13'
 import { day14 } from './day14'
 import { day15 } from './day15'
 import { day16 } from './day16'
+import { day20 } from './day20'
 import { day22 } from './day22'
 import { day23 } from './day23'
+import { day24 } from './day24'
+import { day25 } from './day25'
 
 const [ts_node, main, day, part] = process.argv
 
@@ -41,7 +44,11 @@ const days: { [key: string]: Day } = {
   day14,
   day15,
   day16,
+  day20,
   day22,
+  day23,
+  day24,
+  day25,
 }
 
 const dayToExecute = days[day]
@@ -64,5 +71,7 @@ switch (part) {
 Promise.all(pending).catch((e) => {
   if (e.message === 'TODO') {
     console.error('This is not done yet 🙃')
+  } else {
+    console.error(e.message)
   }
 })
