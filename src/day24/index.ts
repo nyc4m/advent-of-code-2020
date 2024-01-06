@@ -18,8 +18,8 @@ export function* getDirections(input: string): IterableIterator<Direction> {
 }
 
 export function followPath(
-  directions: IterableIterator<Direction>,
-): Record<'x'| 'y', number>{
+  directions: IterableIterator<Direction>
+): Record<'x' | 'y', number> {
   let x = 0
   let y = 0
   for (let direction of directions) {
@@ -48,7 +48,7 @@ export function followPath(
         continue
     }
   }
-  return {x, y}
+  return { x, y }
 }
 
 export function countBlackAndWhite(
@@ -72,7 +72,7 @@ export function countNumberOfBlackTiles(input: string): number {
     const coord = followPath(getDirections(line))
     const key = `${coord.x};${coord.y}`
     const setColor = memory.get(key) || 'White'
-    memory.set(key, setColor === 'White' ? 'Black': 'White')
+    memory.set(key, setColor === 'White' ? 'Black' : 'White')
   }
   const count = countBlackAndWhite(memory)
   return count.black
@@ -80,7 +80,7 @@ export function countNumberOfBlackTiles(input: string): number {
 
 export async function part1() {
   const input = await readFileAsString('./src/day24/input_day24')
-  console.log(`black tiles: ${countNumberOfBlackTiles(input)}`);
+  console.log(`black tiles: ${countNumberOfBlackTiles(input)}`)
 }
 export async function part2() {
   throw new Error('TODO')

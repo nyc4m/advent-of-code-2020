@@ -31,15 +31,12 @@ describe('day24', () => {
   })
 
   it.each([
-    ['esew', {x: 0.5, y:-1}],
-    ['nwwswee', {x:0, y:0}]
-  ])(
-    'should lead to coordinate',
-    (input, expectedCoordinate) => {
-      const coord = Day24.followPath(Day24.getDirections(input))
-      expect(coord).toEqual(expectedCoordinate)
-    }
-  )
+    ['esew', { x: 0.5, y: -1 }],
+    ['nwwswee', { x: 0, y: 0 }],
+  ])('should lead to coordinate', (input, expectedCoordinate) => {
+    const coord = Day24.followPath(Day24.getDirections(input))
+    expect(coord).toEqual(expectedCoordinate)
+  })
 
   it('should find 10 tiles black', () => {
     const input = `sesenwnenenewseeswwswswwnenewsewsw

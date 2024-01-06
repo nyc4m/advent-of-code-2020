@@ -1,4 +1,3 @@
-import { Type } from 'typescript'
 import { readFileAsString } from '../utils'
 
 type Area = [number, number]

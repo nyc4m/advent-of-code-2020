@@ -23,8 +23,8 @@ Player 2:
     expect(
       Day22.executeTurns(List([9, 2, 6, 3, 1]), List([5, 8, 4, 7, 10]))
     ).toEqual({
-        who: 2,
-        score: 306
+      who: 2,
+      score: 306,
     })
   })
 })

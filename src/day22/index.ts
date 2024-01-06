@@ -14,12 +14,14 @@ export function parseDecks(input: string): List<List<number>> {
 }
 
 function calculateScore(player: List<number>) {
-  return player.reverse().reduce((sum, card, index) => sum + card * (index + 1), 0)
+  return player
+    .reverse()
+    .reduce((sum, card, index) => sum + card * (index + 1), 0)
 }
 
 type Winner = {
-    who: number,
-    score: number
+  who: number
+  score: number
 }
 
 export function executeTurns(
@@ -27,10 +29,10 @@ export function executeTurns(
   player2: List<number>
 ): Winner {
   if (player1.isEmpty()) {
-    return {who: 2, score: calculateScore(player2)}
+    return { who: 2, score: calculateScore(player2) }
   }
   if (player2.isEmpty()) {
-    return {who: 1, score: calculateScore(player1)}
+    return { who: 1, score: calculateScore(player1) }
   }
   const [cardPlayer1, cardPlayer2] = [
     player1.first<number>(),
@@ -50,10 +52,10 @@ export function executeTurns(
 }
 
 export async function part1() {
-    const game = readFileAsString('./src/day22/input_day22')
-    const players = parseDecks(await game)
-    const score = executeTurns(players.get(0)!, players.get(1)!)
-    console.log(`Winner's score : ${score}`);
+  const game = readFileAsString('./src/day22/input_day22')
+  const players = parseDecks(await game)
+  const score = executeTurns(players.get(0)!, players.get(1)!)
+  console.log(`Winner's score : ${score}`)
 }
 export async function part2() {
   throw new Error('TODO')

@@ -53,9 +53,11 @@ export function renderNewState(state: Set<Square>): Set<Square> {
   })
 }
 
-export function runUntilNobodyMoveFromTheirDamnSeats(state: Set<Square>): Set<Square> {
+export function runUntilNobodyMoveFromTheirDamnSeats(
+  state: Set<Square>
+): Set<Square> {
   let oldState = state
-  let nextState = renderNewState(state);
+  let nextState = renderNewState(state)
   while (!nextState.equals(oldState)) {
     oldState = nextState
     nextState = renderNewState(oldState)
@@ -67,8 +69,10 @@ class Day11 {
   constructor(private inputPath: string) {}
 
   async part1() {
-    const lastRender = runUntilNobodyMoveFromTheirDamnSeats(await this.positions)
-    console.log(`seats: ${lastRender.filter(s => s.type === '#').size}`)
+    const lastRender = runUntilNobodyMoveFromTheirDamnSeats(
+      await this.positions
+    )
+    console.log(`seats: ${lastRender.filter((s) => s.type === '#').size}`)
   }
 
   async part2() {
